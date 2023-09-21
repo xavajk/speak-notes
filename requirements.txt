@@ -3,3 +3,6 @@ SpeechRecognition
 pyobjc
 gtts
 playsound
+json
+requests
+dotenv

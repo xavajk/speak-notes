@@ -2,11 +2,18 @@ import os
 import gtts
 import speech_recognition as sr
 from playsound import playsound
+from dotenv import load_dotenv
+from datetime import datetime
 
+from notion import NotionClient
 
 r = sr.Recognizer()
 
+load_dotenv()
+token, db = os.getenv('NOTION_INTEGRATION_TOKEN'), os.getenv('NOTION_DB_NAME')
+client = NotionClient(token, db)
 ACTIVATION_COMMAND = 'make a note'
+
 def get_audio():
     with sr.Microphone() as source:
         print("Listening...")
@@ -34,7 +41,7 @@ def play_sound(text):
         print('Could not play sound')
 
 if __name__ == '__main__':
-    
+    # client.get_db()
     while True:
         a = get_audio()
         command = audio_to_text(a)
@@ -47,4 +54,8 @@ if __name__ == '__main__':
 
             if note:
                 play_sound(note)
+                now = datetime.now().astimezone().isoformat()
+                res = client.create_page(note, now, status='1')
+                if res.status_code == 200:
+                    play_sound("Stored new item")
 
