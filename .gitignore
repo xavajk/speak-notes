@@ -1,3 +1,4 @@
 /speak-notes-env
 .env
 *.json
+.DS_store
